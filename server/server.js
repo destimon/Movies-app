@@ -1,10 +1,18 @@
 const express = require('express');
+const mongoose = require('mongoose');
+
 const app = express();
 
-app.listen('3000', () => {
-  console.log('Servers is up');
-})
+require('./api/router')(app);
 
-app.get('/', (req, res) => {
-  res.send('Hi');
+mongoose.connect('mongodb://localhost/filmdb', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => { 
+  console.log('Mongoose connected to host')
+  app.listen('3000', () => { console.log('Servers is up'); })
+})
+.catch((err) => {
+  console.log(err)
 })
