@@ -28,4 +28,17 @@ module.exports = function(app) {
     })
   })
 
+  // 2. Удалить фильм
+  app.post('/delete', (req, res) => {
+    Film.deleteOne({ name: 'justTesting' }, (err) => {
+      if (err) {
+        console.log(err);
+        res.status(500);
+      } else {
+        res.status(200);
+      }
+      res.end();
+    })
+  })
+
 }
