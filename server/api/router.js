@@ -53,4 +53,36 @@ module.exports = function(app) {
     })
   })
 
+  app.get('/show', (req, res) => {
+    if (req.query.name) {
+      Film.findOne({ name: req.query.name }, (err, data) => {
+        if (err) {
+          console.log(err);
+        }
+        res.json(data);
+      }) 
+    }
+    else if (req.query.asc) {
+      if (req.query.asc === 'alpha') {
+        Film.find({}).sort({ name: 'asc' }).exec((err, data) => {
+          if (err) {
+            console.log(err);
+            res.status(500);
+          } else {
+            res.json(data);
+          }
+        })
+      }
+    }
+    else if (req.query.actor) {
+      Film.find({ 'actors.firstName': req.query.actor }, (err, data) => {
+        if (err) {
+          console.log(err);
+        } else {
+          res.json(data);
+        }
+      })
+    }
+  })
+
 }
