@@ -1,0 +1,14 @@
+{
+  "name": "client",
+  "version": "1.0.0",
+  "description": "client for webby lab TA app",
+  "main": "client.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dmitry Cherendieiv",
+  "license": "ISC",
+  "dependencies": {
+    "enquirer": "^2.3.4"
+  }
+}

@@ -11,6 +11,8 @@ module.exports = function(app) {
     let newModel = new Film();
 
     newModel.name = req.query.name;
+    newModel.date = req.query.date;
+    newModel.type = req.query.type;
     newModel.actors = [
       {
         firstName: 'Dmitry',
