@@ -41,4 +41,16 @@ module.exports = function(app) {
     })
   })
 
+  // 3. Показать информацию о фильме
+  app.get('/films/:name', (req, res) => {
+    Film.findOne({ name: req.params.name }, (err, data) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.status(200)
+        res.json(data);
+      }
+    })
+  })
+
 }
