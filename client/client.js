@@ -1,24 +1,36 @@
 const { Select } = require('enquirer');
+const operations = require('./src/operations');
 
 const prompt = new Select({
   name: 'operation',
-  message: 'Выберите операцию',
+  message: 'Choose operation',
   choices: [
-    '1. Добавить фильм',
-    '2. Удалить фильм', 
-    '3. Показать информацию о фильме', 
-    '4. Показать список фильмов отсортированных по названию в алфавитном порядке', 
-    '5. Найти фильм по названию',
-    '6. Найти фильм по имени актера', 
-    '7. Импорт фильмов с текстового файла'
+    '1. Add film',
+    '2. Delete film', 
+    '3. Show information about film', 
+    '4. Show films sorted in alphabetical order', 
+    '5. Find film by name',
+    '6. Find film by actors', 
+    '7. Import films from file'
   ]
 });
 
 prompt.run()
   .then(answer => { 
-    console.log('Выбрано:', answer)
-    if (answer == '1. Добавить фильм') {
-      
+    console.log('Chosen:', answer)
+
+    switch(answer) {
+      case '1. Add film':
+        operations.request_add_film();
+      break;
+      case '2. Delete film':
+        operations.request_delete_film();
+      break;
+      case '3. Show information about film':
+        operations.request_show_film();
+      break;
+      case '4. Show films sorted in alphabetical order':
+        operations.request_order_alpha();
     }
   })
   .catch(console.error);

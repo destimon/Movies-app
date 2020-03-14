@@ -9,6 +9,8 @@
   "author": "Dmitry Cherendieiv",
   "license": "ISC",
   "dependencies": {
-    "enquirer": "^2.3.4"
+    "axios": "^0.19.2",
+    "enquirer": "^2.3.4",
+    "moment": "^2.24.0"
   }
 }
