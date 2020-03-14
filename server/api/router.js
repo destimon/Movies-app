@@ -1,28 +1,27 @@
 const Film = require('../models/film')
 
+function handleError(err, res) {
+  console.log(err);
+  res.status(500);
+}
+
 module.exports = function(app) {
 
   app.get('/', (req, res) => {
     res.send('Hi');
   })
 
-  // 1. Добавить фильм
+  // 1. Add film
   app.post('/add', (req, res) => {
     let newModel = new Film();
 
     newModel.name = req.query.name;
     newModel.date = req.query.date;
     newModel.type = req.query.type;
-    newModel.actors = [
-      {
-        firstName: 'Dmitry',
-        secondName: 'Cherendieiv',
-      }
-    ];
+    newModel.actors = req.body.actors;
     newModel.save((err) => {
       if (err) {
-        console.log(err);
-        res.status(500);
+        handleError(err, res);
       } else {
         res.status(200);
       }
@@ -30,12 +29,11 @@ module.exports = function(app) {
     })
   })
 
-  // 2. Удалить фильм
-  app.post('/delete', (req, res) => {
-    Film.deleteOne({ name: 'justTesting' }, (err) => {
+  // 2. Delete film
+  app.post('/delete/:name', (req, res) => {
+    Film.deleteOne({ name: req.params.name }, (err) => {
       if (err) {
-        console.log(err);
-        res.status(500);
+        handleError(err, res);
       } else {
         res.status(200);
       }
@@ -43,11 +41,12 @@ module.exports = function(app) {
     })
   })
 
-  // 3. Показать информацию о фильме
+  // 3. Show info about film
   app.get('/films/:name', (req, res) => {
+    console.log('Param passed: ' + req.params.name );
     Film.findOne({ name: req.params.name }, (err, data) => {
       if (err) {
-        console.log(err);
+        handleError(err, res);
       } else {
         res.status(200)
         res.json(data);
@@ -59,7 +58,7 @@ module.exports = function(app) {
     if (req.query.name) {
       Film.findOne({ name: req.query.name }, (err, data) => {
         if (err) {
-          console.log(err);
+          handleError(err, res);
         }
         res.json(data);
       }) 
@@ -68,8 +67,7 @@ module.exports = function(app) {
       if (req.query.asc === 'alpha') {
         Film.find({}).sort({ name: 'asc' }).exec((err, data) => {
           if (err) {
-            console.log(err);
-            res.status(500);
+            handleError(err, res);
           } else {
             res.json(data);
           }
@@ -79,7 +77,7 @@ module.exports = function(app) {
     else if (req.query.actor) {
       Film.find({ 'actors.firstName': req.query.actor }, (err, data) => {
         if (err) {
-          console.log(err);
+          handleError(err, res);
         } else {
           res.json(data);
         }

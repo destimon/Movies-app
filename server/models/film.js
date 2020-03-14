@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const ObjectID = require('mongoose').ObjectID;
+const ObjectID = require('mongoose').ObjectId;
 
 const Film = new mongoose.Schema({
-  id: ObjectID,
+  id: ObjectID, // not sure is that needed
   name: String,
   date: Date,
   type: String,
