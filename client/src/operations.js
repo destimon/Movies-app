@@ -2,6 +2,15 @@ const { prompt } = require('enquirer');
 const axios = require('axios');
 const moment = require('moment');
 
+function output_formatted_info(obj1) {
+  console.log('Name: ' + obj1.name);
+  console.log('Date: ' + obj1.date);
+  console.log('Type: ' + obj1.type);
+  console.log('Actors: ');
+  obj1.actors.forEach(obj2 => {
+    console.log(` ${obj2.firstName} ${obj2.secondName}`);
+  })
+}
 
 // TODO: Find time and refactor this shitcode
 async function get_actors() {
@@ -126,8 +135,7 @@ module.exports = {
       let res = await axios.get(`http://127.0.0.1:3000/films/${response.name}`)
 
       if (res.data) {
-        // TODO pretty output
-        console.log('Name: ' + JSON.stringify(res.data));
+        output_formatted_info(res.data);
       } else {
         console.log('Not found');
       }
@@ -141,8 +149,10 @@ module.exports = {
   request_order_alpha() {
     axios.get('http://127.0.0.1:3000/show?asc=alpha')
     .then(res => {
-      // TODO pretty output
-      console.log(res.data);
+      res.data.forEach(obj1 => {
+        output_formatted_info(obj1);
+        console.log('-----------');
+      })
     })
     .catch(err => {
       console.log('Error occured, unable to send request');
@@ -150,7 +160,7 @@ module.exports = {
     })
   },
 
-  request_find_film() {
-    axios.
-  }
+  // request_find_film() {
+  //   axios.
+  // }
 }
