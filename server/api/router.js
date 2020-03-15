@@ -43,7 +43,6 @@ module.exports = function(app) {
 
   // 3. Show info about film
   app.get('/films/:name', (req, res) => {
-    console.log('Param passed: ' + req.params.name );
     Film.findOne({ name: req.params.name }, (err, data) => {
       if (err) {
         handleError(err, res);

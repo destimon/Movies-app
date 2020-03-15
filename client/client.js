@@ -31,6 +31,11 @@ prompt.run()
       break;
       case '4. Show films sorted in alphabetical order':
         operations.request_order_alpha();
+      break;
+      case '5. Find film by name':
+        operations.request_find_film();
+      case '8. Exit':
+        return ;
     }
   })
   .catch(console.error);

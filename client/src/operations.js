@@ -90,7 +90,6 @@ module.exports = {
     const response = await get_full_info();
     let actors = await get_actors();
 
-    console.log(actors);
     try {
       let res = await axios.post('http://127.0.0.1:3000/add', null, {
         data: {
@@ -163,7 +162,20 @@ module.exports = {
     })
   },
 
-  // request_find_film() {
-  //   axios.
-  // }
+  async request_find_film() {
+    let response = await get_film_name();
+
+    try {
+      let res = await axios.get(`http://127.0.0.1:3000/films/${response.name}`)
+      
+      if (res.data) {
+        output_formatted_info(res.data);
+      } else {
+        console.log('Not found');
+      }
+    } catch (err) {
+      console.log('Error occured, unable to send request');
+      console.error(err);
+    }
+  }
 }
