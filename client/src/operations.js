@@ -3,8 +3,10 @@ const axios = require('axios');
 const moment = require('moment');
 
 function output_formatted_info(obj1) {
+  let dateObj = new Date(obj1.date);
+
   console.log('Name: ' + obj1.name);
-  console.log('Date: ' + obj1.date);
+  console.log(`Date: ${dateObj.getDate()}/${dateObj.getMonth()}/${dateObj.getFullYear()}`);
   console.log('Type: ' + obj1.type);
   console.log('Actors: ');
   obj1.actors.forEach(obj2 => {
@@ -149,6 +151,7 @@ module.exports = {
   request_order_alpha() {
     axios.get('http://127.0.0.1:3000/show?asc=alpha')
     .then(res => {
+      console.log('-----------');
       res.data.forEach(obj1 => {
         output_formatted_info(obj1);
         console.log('-----------');
