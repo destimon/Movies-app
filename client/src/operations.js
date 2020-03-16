@@ -70,10 +70,9 @@ module.exports = {
   request_order_alpha() {
     axios.get('http://127.0.0.1:3000/show?asc=alpha')
     .then(res => {
-      info.m('-----------');
       res.data.forEach(obj1 => {
         prompt_met.output_formatted_info(obj1);
-        info.m('\n-----------');
+        info.m('\n');
       })
     })
     .catch(err => {
@@ -110,7 +109,10 @@ module.exports = {
       });
 
       if (res.data) {
-        prompt_met.output_formatted_info(res.data);
+        res.data.forEach(element => {
+          prompt_met.output_formatted_info(element);
+          console.log('\n');
+        });
       } else {
         log('Not found');
       }

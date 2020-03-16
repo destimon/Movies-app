@@ -10,7 +10,7 @@ module.exports = {
     log.m('Format: ' + obj1.type);
     process.stdout.write('Stars: ');
     obj1.actors.forEach(obj2 => {
-      process.stdout.write(` ${obj2.firstName} ${obj2.secondName}, `);
+      process.stdout.write(` ${obj2.firstName} ${obj2.secondName} |`);
     })
   },
   

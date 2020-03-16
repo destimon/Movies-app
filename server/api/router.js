@@ -87,7 +87,7 @@ module.exports = function(app) {
     }
     // 6. Find film by actors
     else if (req.body.actor) {
-      Film.findOne({ 'actors.firstName': req.body.actor.firstName, 'actors.secondName': req.body.actor.secondName }, (err, data) => {
+      Film.find({ 'actors.firstName': req.body.actor.firstName, 'actors.secondName': req.body.actor.secondName }, (err, data) => {
         if (err) {
           handleError(err, res);
         } else {
