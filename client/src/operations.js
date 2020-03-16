@@ -108,7 +108,7 @@ module.exports = {
         }
       });
 
-      if (res.data) {
+      if (res.data.length) {
         res.data.forEach(element => {
           prompt_met.output_formatted_info(element);
           console.log('\n');

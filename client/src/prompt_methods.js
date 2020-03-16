@@ -1,14 +1,16 @@
 const { prompt } = require('enquirer');
-const { info, warn, log, error, indent } = require('pretty-console-logs');
+const { warn, error } = require('pretty-console-logs');
+const chalk = require('chalk');
 
 module.exports = {
   output_formatted_info(obj1) {
     let dateObj = new Date(obj1.date);
   
-    log.m('Title: ' + obj1.name);
-    log.m(`Release Year: ${dateObj.getFullYear()}`);
-    log.m('Format: ' + obj1.type);
-    process.stdout.write('Stars: ');
+    warn.m(`[ID ${obj1._id}]`)
+    console.log(chalk.green('Title: ') + obj1.name);
+    console.log(`${chalk.green('Release Year:')} ${dateObj.getFullYear()}`);
+    console.log(chalk.green('Format: ') + obj1.type);
+    process.stdout.write(chalk.green('Stars:'));
     obj1.actors.forEach(obj2 => {
       process.stdout.write(` ${obj2.firstName} ${obj2.secondName} |`);
     })

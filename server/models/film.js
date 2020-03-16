@@ -1,11 +1,19 @@
 const mongoose = require('mongoose');
-const ObjectID = require('mongoose').ObjectId;
 
 const Film = new mongoose.Schema({
-  id: ObjectID, // not sure is that needed
-  name: String,
-  date: Date,
-  type: String,
+  name: { 
+    type: String, 
+    required: true,
+    default: 'Unnamed'
+  },
+  date: {
+    type: Date,
+    default: Date.now
+  },
+  type: { 
+    type: String,
+    enum: ['VHS', 'DVD', 'Blu-Ray']
+  },
   actors: [
     {
       firstName: String,
