@@ -1,5 +1,11 @@
 const { Select } = require('enquirer');
+const { error, log } = require('pretty-console-logs');
 const operations = require('./src/operations');
+
+process.on('uncaughtException', (err) => {
+  error('Unhandled error, immediate exiting!');
+  log(err);
+});
 
 const prompt = new Select({
   name: 'operation',

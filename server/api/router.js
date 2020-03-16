@@ -8,33 +8,37 @@ function handleError(err, res) {
 
 async function saveModel(req, res, model) {
 
-  await Film.findOne({ name: model.name }, (err, data) => {
-    if (err) {
+  await Film.findOne({ name: model.name }, async (err, data) => {
+    try {
+      if (err) {
+        handleError(err, res);
+      }
+      if (data) {
+        await res.status(202);
+        return ;
+      } else {
+        let newModel = new Film();
+
+        if (model && Object.keys(model).length) {
+          newModel.name = model.name;
+          newModel.date = model.date;
+          newModel.type = model.type;
+          newModel.actors = model.actors;
+          await newModel.save((err) => {
+            if (err) {
+              handleError(err, res);
+            } else {
+              res.status(200);
+            }
+          });
+        }    
+      }
+    }
+    catch (err) {
       handleError(err, res);
     }
-    if (data) {
-      res.status(202);
-      res.json(data);
-      return ;
-    } else {
-      let newModel = new Film();
-
-      if (model && Object.keys(model).length) {
-        newModel.name = model.name;
-        newModel.date = model.date;
-        newModel.type = model.type;
-        newModel.actors = model.actors;
-        newModel.save((err) => {
-          if (err) {
-            handleError(err, res);
-          } else {
-            res.status(200);
-          }
-        });
-      }    
-    }
   });
-  res.end();
+  await res.end();
 }
 
 module.exports = function(app) {

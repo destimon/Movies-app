@@ -27,7 +27,6 @@ module.exports = {
       }
       else if (res.status == 202) {
         log('Already exists');
-        prompt_met.output_formatted_info(res.data);
       } else {
         error('Failure! Code: ', res.status);
       }

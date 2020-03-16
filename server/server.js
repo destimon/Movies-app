@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
-
+const { error, info } = require('pretty-console-logs');
 const app = express();
 
 app.use(fileUpload());
@@ -16,9 +16,9 @@ mongoose.connect('mongodb://localhost/filmdb', {
   useUnifiedTopology: true
 })
   .then(() => { 
-    console.log('Mongoose connected to host');
-    app.listen('3000', () => { console.log('Servers is up'); });
+    info('Mongoose connected to host');
+    app.listen('3000', () => { info('Servers is up'); });
   })
   .catch((err) => {
-    console.log(err);
+    error(err);
   });
