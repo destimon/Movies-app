@@ -9,7 +9,7 @@ function handleError(err, res) {
 function saveModel(req, res, model) {
   let newModel = new Film();
 
-  if (model) {
+  if (model && Object.keys(model).length) {
     newModel.name = model.name;
     newModel.date = model.date;
     newModel.type = model.type;
@@ -33,7 +33,10 @@ module.exports = function(app) {
 
   // 1. Add film
   app.post('/add', (req, res) => {
-    saveModel(req, res, req.query);
+    let model = req.query;
+
+    model.actors = req.body.actors;
+    saveModel(req, res, model);
   })
 
   // 2. Delete film
@@ -61,16 +64,7 @@ module.exports = function(app) {
   })
 
   app.get('/show', (req, res) => {
-    if (req.query.name) {
-      // 5. Find film by name
-      Film.findOne({ name: req.query.name }, (err, data) => {
-        if (err) {
-          handleError(err, res);
-        }
-        res.json(data);
-      }) 
-    }
-    else if (req.query.asc) {
+    if (req.query.asc) {
       // 4. Show films sorted in alphabetical order
       if (req.query.asc === 'alpha') {
         Film.find({}).sort({ name: 'asc' }).exec((err, data) => {
@@ -81,6 +75,15 @@ module.exports = function(app) {
           }
         })
       }
+    }
+    else if (req.query.name) {
+      // 5. Find film by name
+      Film.findOne({ name: req.query.name }, (err, data) => {
+        if (err) {
+          handleError(err, res);
+        }
+        res.json(data);
+      }) 
     }
     // 6. Find film by actors
     else if (req.body.actor) {
@@ -97,9 +100,9 @@ module.exports = function(app) {
   app.post('/file', (req, res) => {
     let text = req.files.file.data.toString('utf8');
 
+    // Cap'n Jazz – Oh Messy Life
     Papa.parse(text, {
       complete(results) {
-        let filmsArray = [];
         let filmObj = {};
         for (let film of results.data) {
           if (film[0]) {
@@ -128,9 +131,7 @@ module.exports = function(app) {
                 }
               });
             }
-            filmsArray.push(filmObj);
           } else {
-            console.log(filmObj);
             saveModel(req, res, filmObj);
             filmObj = {};
           }
