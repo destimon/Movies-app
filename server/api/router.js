@@ -6,32 +6,34 @@ function handleError(err, res) {
   res.status(500);
 }
 
-function saveModel(req, res, model) {
+async function saveModel(req, res, model) {
 
-  Film.findOne({ name: model.name }, (err, data) => {
+  await Film.findOne({ name: model.name }, (err, data) => {
     if (err) {
       handleError(err, res);
     }
     if (data) {
-      res.status(405);
-      res.end();
+      res.status(202);
+      res.json(data);
+      return ;
+    } else {
+      let newModel = new Film();
+
+      if (model && Object.keys(model).length) {
+        newModel.name = model.name;
+        newModel.date = model.date;
+        newModel.type = model.type;
+        newModel.actors = model.actors;
+        newModel.save((err) => {
+          if (err) {
+            handleError(err, res);
+          } else {
+            res.status(200);
+          }
+        })
+      }    
     }
   })
-  let newModel = new Film();
-
-  if (model && Object.keys(model).length) {
-    newModel.name = model.name;
-    newModel.date = model.date;
-    newModel.type = model.type;
-    newModel.actors = model.actors;
-    newModel.save((err) => {
-      if (err) {
-        handleError(err, res);
-      } else {
-        res.status(200);
-      }
-    })
-  }
   res.end();
 }
 
