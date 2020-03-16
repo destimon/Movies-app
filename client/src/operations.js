@@ -1,7 +1,7 @@
 const axios = require('axios');
 const moment = require('moment');
 const prompt_met = require('./prompt_methods');
-const { info, warn, log, error } = require('pretty-console-logs');
+const { info, log, error } = require('pretty-console-logs');
 const fs = require('fs');
 const FormData = require('form-data');
 
@@ -29,7 +29,6 @@ module.exports = {
       }
     } catch (err) {
       error('Error occured, unable to send request');
-      console.error(err);
     }
   },
 
@@ -45,7 +44,6 @@ module.exports = {
       }
     } catch (err) {
       error('Error occured, unable to send request');
-      console.error(err);
     }
   },
 
@@ -62,7 +60,6 @@ module.exports = {
       }
     } catch (err) {
       error('Error occured, unable to send request');
-      console.error(err);
     }
 
   },
@@ -77,7 +74,6 @@ module.exports = {
     })
     .catch(err => {
       error('Error occured, unable to send request');
-      console.error(err);
     })
   },
 
@@ -94,7 +90,6 @@ module.exports = {
       }
     } catch (err) {
       error('Error occured, unable to send request');
-      console.error(err);
     }
   },
 
@@ -118,7 +113,6 @@ module.exports = {
       }
     } catch (err) {
       error('Error occured, unable to send request');
-      console.error(err);
     }
   },
 
@@ -143,10 +137,8 @@ module.exports = {
       })
       .catch(err => {
         error('Error occured, unable to send request');
-        console.error(err);
       })
     } catch (err) {
-      console.error(err);
       error('Error occured in file upload');
     }
 

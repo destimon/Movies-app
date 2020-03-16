@@ -1,5 +1,5 @@
 const { prompt } = require('enquirer');
-const { warn, error } = require('pretty-console-logs');
+const { warn } = require('pretty-console-logs');
 const chalk = require('chalk');
 
 module.exports = {
@@ -12,7 +12,7 @@ module.exports = {
     console.log(chalk.green('Format: ') + obj1.type);
     process.stdout.write(chalk.green('Stars:'));
     obj1.actors.forEach(obj2 => {
-      process.stdout.write(` ${obj2.firstName} ${obj2.secondName} |`);
+      process.stdout.write(` ${obj2.firstName} ${obj2.secondName} ${chalk.green('|')}`);
     })
   },
   
