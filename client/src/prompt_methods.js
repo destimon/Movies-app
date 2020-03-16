@@ -14,6 +14,7 @@ module.exports = {
     obj1.actors.forEach(obj2 => {
       process.stdout.write(` ${obj2.firstName} ${obj2.secondName} ${chalk.green('|')}`);
     });
+    process.stdout.write('\n');
   },
   
   async get_actors() {  
