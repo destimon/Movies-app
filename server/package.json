@@ -4,9 +4,9 @@
   "description": "server",
   "main": "server.js",
   "scripts": {
-    "test": "SET NODE_ENV=test&&mocha",
-    "dev": "SET NODE_ENV=dev&&nodemon server.js",
-    "start": "SET NODE_ENV=prod&&node server.js"
+    "test": "NODE_ENV=test mocha",
+    "dev": "NODE_ENV=dev nodemon server.js",
+    "start": "NODE_ENV=prod node server.js"
   },
   "author": "Dmitry Cherendieiv",
   "license": "ISC",
