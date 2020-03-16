@@ -127,7 +127,7 @@ describe('Films', () => {
             res.should.have.status(200);
           })
         done();
+        process.exit();
       })
     });
-
 })
