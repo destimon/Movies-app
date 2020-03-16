@@ -49,10 +49,9 @@ module.exports = function(app) {
 
   // 1. Add film
   app.post('/add', (req, res) => {
-    let model = req.query;
-
-    model.actors = req.body.actors;
-    saveModel(req, res, model);
+    if (!req.body.name)
+      res.status(404);
+    saveModel(req, res, req.body);
   });
 
   // 2. Delete film

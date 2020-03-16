@@ -14,8 +14,6 @@ module.exports = {
       let res = await axios.post('http://127.0.0.1:3000/add', null, {
         data: {
           actors,
-        },
-        params: {
           name: response.name,
           date: moment(response.date, 'YYYY-MM-DD').toDate(),
           type: response.type,
