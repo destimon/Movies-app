@@ -1,10 +1,12 @@
 const { Select } = require('enquirer');
-const { error, log } = require('pretty-console-logs');
+const { error, log, info } = require('pretty-console-logs');
 const operations = require('./src/operations');
 
 process.on('uncaughtException', (err) => {
-  error('Unhandled error, immediate exiting!');
-  log(err);
+  error('Unhandled error, immediate exiting!\n');
+  info(err, '\n');
+  log('Generating a core file\n'); 
+  process.abort();
 });
 
 const prompt = new Select({
