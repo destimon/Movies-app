@@ -11,7 +11,8 @@ const prompt = new Select({
     '4. Show films sorted in alphabetical order', 
     '5. Find film by name',
     '6. Find film by actors', 
-    '7. Import films from file'
+    '7. Import films from file',
+    '8. Exit'
   ]
 });
 
