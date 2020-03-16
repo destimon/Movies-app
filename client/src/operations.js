@@ -1,4 +1,4 @@
-const axios = require('axios');
+const axios = require('./config').axiosInstance;
 const moment = require('moment');
 const prompt_met = require('./prompt_methods');
 const { info, log, error } = require('pretty-console-logs');
@@ -11,7 +11,7 @@ module.exports = {
     let actors = await prompt_met.get_actors();
 
     try {
-      let res = await axios.post('http://127.0.0.1:3000/add', null, {
+      let res = await axios.post('/add', null, {
         data: {
           actors,
           name: response.name,
@@ -37,7 +37,7 @@ module.exports = {
     let response = await prompt_met.get_film_name();
 
     try {
-      let res = await axios.delete(`http://127.0.0.1:3000/delete/${response.name}`);
+      let res = await axios.delete(`/delete/${response.name}`);
       if (res.status == 200) {
         info('Success! Code: ', res.status);
       }
@@ -55,7 +55,7 @@ module.exports = {
     let response = await prompt_met.get_film_name();
 
     try {
-      let res = await axios.get(`http://127.0.0.1:3000/films/${response.name}`);
+      let res = await axios.get(`/films/${response.name}`);
 
       if (res.data) {
         prompt_met.output_formatted_info(res.data);
@@ -69,7 +69,7 @@ module.exports = {
   },
 
   request_order_alpha() {
-    axios.get('http://127.0.0.1:3000/show?asc=alpha')
+    axios.get('/show?asc=alpha')
       .then(res => {
         res.data.forEach(obj1 => {
           prompt_met.output_formatted_info(obj1);
@@ -85,7 +85,7 @@ module.exports = {
     let response = await prompt_met.get_film_name();
 
     try {
-      let res = await axios.get(`http://127.0.0.1:3000/films/${response.name}`);
+      let res = await axios.get(`/films/${response.name}`);
       
       if (res.data) {
         prompt_met.output_formatted_info(res.data);
@@ -101,7 +101,7 @@ module.exports = {
     let response = await prompt_met.get_actor_name(); // actor object
 
     try {
-      let res = await axios.get('http://127.0.0.1:3000/show', {
+      let res = await axios.get('/show', {
         data: {
           actor: response
         }
@@ -127,7 +127,7 @@ module.exports = {
       let formData = new FormData();
       formData.append('file', fs.createReadStream(filename));
       
-      await axios.post('http://127.0.0.1:3000/file', formData, {
+      await axios.post('/file', formData, {
         headers: {
           'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
         },
