@@ -1,94 +1,14 @@
-const { prompt } = require('enquirer');
 const axios = require('axios');
 const moment = require('moment');
-
-function output_formatted_info(obj1) {
-  let dateObj = new Date(obj1.date);
-
-  console.log('Name: ' + obj1.name);
-  console.log(`Date: ${dateObj.getDate()}/${dateObj.getMonth()}/${dateObj.getFullYear()}`);
-  console.log('Type: ' + obj1.type);
-  console.log('Actors: ');
-  obj1.actors.forEach(obj2 => {
-    console.log(` ${obj2.firstName} ${obj2.secondName}`);
-  })
-}
-
-// TODO: Find time and refactor this shitcode
-async function get_actors() {
-  let array = [];
-
-  while (true) {
-    let obj = {};
-
-    let response = await prompt([
-      {
-        type: 'input',
-        name: 'firstName',
-        message: 'Print first name of the actor'
-      }
-    ])
-    obj.firstName = response.firstName;
-
-    response = await prompt([
-      {
-        type: 'input',
-        name: 'secondName',
-        message: 'Print second name of the actor'
-      }
-    ])
-    obj.secondName = response.secondName;
-
-    array.push(obj);
-    response = await prompt([
-      {
-        type: 'confirm',
-        name: 'question',
-        message: 'Stop?'
-      }
-    ]);
-    if (response.question)
-      return array;
-  }
-}
-
-function get_film_name() {
-  return prompt([
-    {
-      type: 'input',
-      name: 'name',
-      message: 'Print name of the film'
-    }
-  ])
-} 
-
-function get_full_info() {
-  return prompt([
-    {
-      type: 'input',
-      name: 'name',
-      message: 'Print name of the film'
-    },
-    {
-      type: 'input',
-      name: 'date',
-      message: 'Print date of the film'
-    },
-    {
-      type: 'select',
-      name: 'type',
-      message: 'Select type of the film',
-      choices: [
-        'VHS', 'DVD', 'Blu-Ray'
-      ]
-    },
-  ]);
-}
+const prompt_met = require('./prompt_methods');
+const { info, warn, log, error } = require('pretty-console-logs');
+const fs = require('fs');
+const FormData = require('form-data');
 
 module.exports = {
   async request_add_film() {
-    const response = await get_full_info();
-    let actors = await get_actors();
+    const response = await prompt_met.get_full_info();
+    let actors = await prompt_met.get_actors();
 
     try {
       let res = await axios.post('http://127.0.0.1:3000/add', null, {
@@ -103,45 +23,45 @@ module.exports = {
       })
 
       if (res.status == 200) {
-        console.log('Success! Code: ', res.status);
+        info('Success! Code: ', res.status);
       } else {
-        console.log('Failure! Code: ', res.status);
+        error('Failure! Code: ', res.status);
       }
     } catch (err) {
-      console.log('Error occured, unable to send request');
+      error('Error occured, unable to send request');
       console.error(err);
     }
   },
 
   async request_delete_film() {
-    let response = await get_film_name();
+    let response = await prompt_met.get_film_name();
 
     try {
-      let res = await axios.post(`http://127.0.0.1:3000/delete/${response.name}`)
+      let res = await axios.delete(`http://127.0.0.1:3000/delete/${response.name}`)
       if (res.status == 200) {
-        console.log('Success! Code: ', res.status);
+        info('Success! Code: ', res.status);
       } else {
-        console.log('Failure! Code: ', res.status);
+        error('Failure! Code: ', res.status);
       }
     } catch (err) {
-      console.log('Error occured, unable to send request');
+      error('Error occured, unable to send request');
       console.error(err);
     }
   },
 
   async request_show_film() {
-    let response = await get_film_name();
+    let response = await prompt_met.get_film_name();
 
     try {
       let res = await axios.get(`http://127.0.0.1:3000/films/${response.name}`)
 
       if (res.data) {
-        output_formatted_info(res.data);
+        prompt_met.output_formatted_info(res.data);
       } else {
-        console.log('Not found');
+        log('Not found');
       }
     } catch (err) {
-      console.log('Error occured, unable to send request');
+      error('Error occured, unable to send request');
       console.error(err);
     }
 
@@ -150,32 +70,83 @@ module.exports = {
   request_order_alpha() {
     axios.get('http://127.0.0.1:3000/show?asc=alpha')
     .then(res => {
-      console.log('-----------');
+      info.m('-----------');
       res.data.forEach(obj1 => {
-        output_formatted_info(obj1);
-        console.log('-----------');
+        prompt_met.output_formatted_info(obj1);
+        info.m('\n-----------');
       })
     })
     .catch(err => {
-      console.log('Error occured, unable to send request');
+      error('Error occured, unable to send request');
       console.error(err);
     })
   },
 
   async request_find_film() {
-    let response = await get_film_name();
+    let response = await prompt_met.get_film_name();
 
     try {
       let res = await axios.get(`http://127.0.0.1:3000/films/${response.name}`)
       
       if (res.data) {
-        output_formatted_info(res.data);
+        prompt_met.output_formatted_info(res.data);
       } else {
-        console.log('Not found');
+        log('Not found');
       }
     } catch (err) {
-      console.log('Error occured, unable to send request');
+      error('Error occured, unable to send request');
       console.error(err);
     }
+  },
+
+  async request_find_actor() {
+    let response = await prompt_met.get_actor_name(); // actor object
+
+    try {
+      let res = await axios.get(`http://127.0.0.1:3000/show`, {
+        data: {
+          actor: response
+        }
+      });
+
+      if (res.data) {
+        prompt_met.output_formatted_info(res.data);
+      } else {
+        log('Not found');
+      }
+    } catch (err) {
+      error('Error occured, unable to send request');
+      console.error(err);
+    }
+  },
+
+  async request_import_file() {
+    let filename = await prompt_met.get_file_name();
+    
+    try {
+      let formData = new FormData();
+      formData.append('file', fs.createReadStream(filename));
+      
+      await axios.post('http://127.0.0.1:3000/file', formData, {
+        headers: {
+          'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
+        },
+      })
+      .then(res => {
+        if (res.status == 200) {
+          info('Success! Code: ', res.status);
+        } else {
+          error('Failure! Code: ', res.status);
+        }
+      })
+      .catch(err => {
+        error('Error occured, unable to send request');
+        console.error(err);
+      })
+    } catch (err) {
+      console.error(err);
+      error('Error occured in file upload');
+    }
+
   }
 }

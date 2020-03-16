@@ -1,4 +1,7 @@
 const Film = require('../models/film')
+var multer  = require('multer')
+var upload = multer({ dest: 'uploads/' })
+const formidable = require('formidable');
 
 function handleError(err, res) {
   console.log(err);
@@ -30,7 +33,7 @@ module.exports = function(app) {
   })
 
   // 2. Delete film
-  app.post('/delete/:name', (req, res) => {
+  app.delete('/delete/:name', (req, res) => {
     Film.deleteOne({ name: req.params.name }, (err) => {
       if (err) {
         handleError(err, res);
@@ -55,6 +58,7 @@ module.exports = function(app) {
 
   app.get('/show', (req, res) => {
     if (req.query.name) {
+      // 5. Find film by name
       Film.findOne({ name: req.query.name }, (err, data) => {
         if (err) {
           handleError(err, res);
@@ -63,6 +67,7 @@ module.exports = function(app) {
       }) 
     }
     else if (req.query.asc) {
+      // 4. Show films sorted in alphabetical order
       if (req.query.asc === 'alpha') {
         Film.find({}).sort({ name: 'asc' }).exec((err, data) => {
           if (err) {
@@ -73,8 +78,9 @@ module.exports = function(app) {
         })
       }
     }
-    else if (req.query.actor) {
-      Film.find({ 'actors.firstName': req.query.actor }, (err, data) => {
+    // 6. Find film by actors
+    else if (req.body.actor) {
+      Film.findOne({ 'actors.firstName': req.body.actor.firstName, 'actors.secondName': req.body.actor.secondName }, (err, data) => {
         if (err) {
           handleError(err, res);
         } else {
@@ -82,6 +88,11 @@ module.exports = function(app) {
         }
       })
     }
+  })
+
+  app.post('/file', (req, res) => {
+    console.log(req.files)
+    res.end();
   })
 
 }

@@ -11,6 +11,8 @@
   "dependencies": {
     "axios": "^0.19.2",
     "enquirer": "^2.3.4",
-    "moment": "^2.24.0"
+    "form-data": "^3.0.0",
+    "moment": "^2.24.0",
+    "pretty-console-logs": "^0.3.0"
   }
 }

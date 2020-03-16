@@ -34,6 +34,13 @@ prompt.run()
       break;
       case '5. Find film by name':
         operations.request_find_film();
+      break;
+      case '6. Find film by actors':
+        operations.request_find_actor();
+      break;
+      case '7. Import films from file':
+        operations.request_import_file();
+      break;
       case '8. Exit':
         return ;
     }
