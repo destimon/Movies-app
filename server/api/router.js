@@ -1,4 +1,4 @@
-const Film = require('../models/film')
+const Film = require('../models/film');
 const Papa = require('papaparse'); 
 
 function handleError(err, res) {
@@ -30,10 +30,10 @@ async function saveModel(req, res, model) {
           } else {
             res.status(200);
           }
-        })
+        });
       }    
     }
-  })
+  });
   res.end();
 }
 
@@ -41,7 +41,7 @@ module.exports = function(app) {
 
   app.get('/', (req, res) => {
     res.send('Hi');
-  })
+  });
 
   // 1. Add film
   app.post('/add', (req, res) => {
@@ -49,7 +49,7 @@ module.exports = function(app) {
 
     model.actors = req.body.actors;
     saveModel(req, res, model);
-  })
+  });
 
   // 2. Delete film
   app.delete('/delete/:name', (req, res) => {
@@ -63,8 +63,8 @@ module.exports = function(app) {
         res.status(200);
       }
       res.end();
-    })
-  })
+    });
+  });
 
   // 3. Show info about film
   app.get('/films/:name', (req, res) => {
@@ -72,11 +72,11 @@ module.exports = function(app) {
       if (err) {
         handleError(err, res);
       } else {
-        res.status(200)
+        res.status(200);
         res.json(data);
       }
-    })
-  })
+    });
+  });
 
   app.get('/show', (req, res) => {
     if (req.query.asc) {
@@ -88,7 +88,7 @@ module.exports = function(app) {
           } else {
             res.json(data);
           }
-        })
+        });
       }
     }
     else if (req.query.name) {
@@ -98,7 +98,7 @@ module.exports = function(app) {
           handleError(err, res);
         }
         res.json(data);
-      }) 
+      }); 
     }
     // 6. Find film by actors
     else if (req.body.actor) {
@@ -108,9 +108,9 @@ module.exports = function(app) {
         } else {
           res.json(data);
         }
-      })
+      });
     }
-  })
+  });
 
   app.post('/file', (req, res) => {
     let text = req.files.file.data.toString('utf8');
@@ -153,8 +153,8 @@ module.exports = function(app) {
         }
       },
       dynamicTyping: true,
-    })
+    });
     res.end();
-  })
+  });
 
-}
+};

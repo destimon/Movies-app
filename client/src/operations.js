@@ -20,7 +20,7 @@ module.exports = {
           date: moment(response.date, 'YYYY-MM-DD').toDate(),
           type: response.type,
         }
-      })
+      });
 
       if (res.status == 200) {
         info('Success! Code: ', res.status);
@@ -40,7 +40,7 @@ module.exports = {
     let response = await prompt_met.get_film_name();
 
     try {
-      let res = await axios.delete(`http://127.0.0.1:3000/delete/${response.name}`)
+      let res = await axios.delete(`http://127.0.0.1:3000/delete/${response.name}`);
       if (res.status == 200) {
         info('Success! Code: ', res.status);
       }
@@ -58,7 +58,7 @@ module.exports = {
     let response = await prompt_met.get_film_name();
 
     try {
-      let res = await axios.get(`http://127.0.0.1:3000/films/${response.name}`)
+      let res = await axios.get(`http://127.0.0.1:3000/films/${response.name}`);
 
       if (res.data) {
         prompt_met.output_formatted_info(res.data);
@@ -73,22 +73,22 @@ module.exports = {
 
   request_order_alpha() {
     axios.get('http://127.0.0.1:3000/show?asc=alpha')
-    .then(res => {
-      res.data.forEach(obj1 => {
-        prompt_met.output_formatted_info(obj1);
-        info.m('\n');
+      .then(res => {
+        res.data.forEach(obj1 => {
+          prompt_met.output_formatted_info(obj1);
+          info.m('\n');
+        });
       })
-    })
-    .catch(err => {
-      error('Error occured, unable to send request');
-    })
+      .catch(() => {
+        error('Error occured, unable to send request');
+      });
   },
 
   async request_find_film() {
     let response = await prompt_met.get_film_name();
 
     try {
-      let res = await axios.get(`http://127.0.0.1:3000/films/${response.name}`)
+      let res = await axios.get(`http://127.0.0.1:3000/films/${response.name}`);
       
       if (res.data) {
         prompt_met.output_formatted_info(res.data);
@@ -104,7 +104,7 @@ module.exports = {
     let response = await prompt_met.get_actor_name(); // actor object
 
     try {
-      let res = await axios.get(`http://127.0.0.1:3000/show`, {
+      let res = await axios.get('http://127.0.0.1:3000/show', {
         data: {
           actor: response
         }
@@ -135,19 +135,19 @@ module.exports = {
           'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
         },
       })
-      .then(res => {
-        if (res.status == 200) {
-          info('Success! Code: ', res.status);
-        } else {
-          error('Failure! Code: ', res.status);
-        }
-      })
-      .catch(err => {
-        error('Error occured, unable to send request');
-      })
+        .then(res => {
+          if (res.status == 200) {
+            info('Success! Code: ', res.status);
+          } else {
+            error('Failure! Code: ', res.status);
+          }
+        })
+        .catch(() => {
+          error('Error occured, unable to send request');
+        });
     } catch (err) {
       error('Error occured in file upload');
     }
 
   }
-}
+};
