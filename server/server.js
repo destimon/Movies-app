@@ -5,6 +5,9 @@ const fileUpload = require('express-fileupload');
 const { error, info } = require('pretty-console-logs');
 const app = express();
 
+const PORT = 3000;
+const HOST = 'localhost';
+
 app.use(fileUpload());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -17,7 +20,7 @@ mongoose.connect('mongodb://localhost/filmdb', {
 })
   .then(() => { 
     info('Mongoose connected to host');
-    app.listen('3000', () => { info('Servers is up'); });
+    app.listen(PORT, HOST, () => { info(`Servers is up | HOST:${HOST} | PORT:${PORT} |`); });
   })
   .catch((err) => {
     error(err);
