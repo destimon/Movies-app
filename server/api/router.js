@@ -1,11 +1,28 @@
 const Film = require('../models/film')
-var multer  = require('multer')
-var upload = multer({ dest: 'uploads/' })
-const formidable = require('formidable');
+const Papa = require('papaparse'); 
 
 function handleError(err, res) {
   console.log(err);
   res.status(500);
+}
+
+function saveModel(req, res, model) {
+  let newModel = new Film();
+
+  if (model) {
+    newModel.name = model.name;
+    newModel.date = model.date;
+    newModel.type = model.type;
+    newModel.actors = model.actors;
+    newModel.save((err) => {
+      if (err) {
+        handleError(err, res);
+      } else {
+        res.status(200);
+      }
+      res.end();
+    })
+  }
 }
 
 module.exports = function(app) {
@@ -16,20 +33,7 @@ module.exports = function(app) {
 
   // 1. Add film
   app.post('/add', (req, res) => {
-    let newModel = new Film();
-
-    newModel.name = req.query.name;
-    newModel.date = req.query.date;
-    newModel.type = req.query.type;
-    newModel.actors = req.body.actors;
-    newModel.save((err) => {
-      if (err) {
-        handleError(err, res);
-      } else {
-        res.status(200);
-      }
-      res.end();
-    })
+    saveModel(req, res, req.query);
   })
 
   // 2. Delete film
@@ -91,7 +95,49 @@ module.exports = function(app) {
   })
 
   app.post('/file', (req, res) => {
-    console.log(req.files)
+    let text = req.files.file.data.toString('utf8');
+
+    Papa.parse(text, {
+      complete(results) {
+        let filmsArray = [];
+        let filmObj = {};
+        for (let film of results.data) {
+          if (film[0]) {
+            let line = film[0].split(':');
+            if (line[0].trim() == 'Title')
+              filmObj.name = line[1].trim();
+            else if (line[0].trim() == 'Release Year')
+              filmObj.date = line[1].trim();
+            else if (line[0].trim() == 'Format')
+              filmObj.type = line[1].trim();
+            else if (line[0].trim() == 'Stars') {
+              let starsArray = [];
+              let starsObj = {
+                firstName: line[1].trim().split(' ')[0],
+                secondName: line[1].trim().split(' ')[1]
+              };
+              starsArray.push(starsObj);
+              filmObj.actors = starsArray;
+              film.forEach(element => {
+                if (element.split(':')[0].trim() != 'Stars') {
+                  starsObj = {
+                    firstName: element.trim().split(' ')[0],
+                    secondName: element.trim().split(' ')[1]
+                  };
+                  starsArray.push(starsObj);
+                }
+              });
+            }
+            filmsArray.push(filmObj);
+          } else {
+            console.log(filmObj);
+            saveModel(req, res, filmObj);
+            filmObj = {};
+          }
+        }
+      },
+      dynamicTyping: true,
+    })
     res.end();
   })
 
