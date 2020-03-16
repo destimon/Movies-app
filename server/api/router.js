@@ -76,8 +76,7 @@ module.exports = function(app) {
       if (err) {
         handleError(err, res);
       } else {
-        res.status(200);
-        res.json(data);
+        res.status(200).json(data);
       }
     });
   });
