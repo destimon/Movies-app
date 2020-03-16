@@ -7,6 +7,16 @@ function handleError(err, res) {
 }
 
 function saveModel(req, res, model) {
+
+  Film.findOne({ name: model.name }, (err, data) => {
+    if (err) {
+      handleError(err, res);
+    }
+    if (data) {
+      res.status(405);
+      res.end();
+    }
+  })
   let newModel = new Film();
 
   if (model && Object.keys(model).length) {
@@ -20,9 +30,9 @@ function saveModel(req, res, model) {
       } else {
         res.status(200);
       }
-      res.end();
     })
   }
+  res.end();
 }
 
 module.exports = function(app) {
@@ -41,9 +51,12 @@ module.exports = function(app) {
 
   // 2. Delete film
   app.delete('/delete/:name', (req, res) => {
-    Film.deleteOne({ name: req.params.name }, (err) => {
+    Film.deleteOne({ name: req.params.name }, (err, data) => {
       if (err) {
         handleError(err, res);
+      }
+      else if (data.n == 0) {
+        res.status(202);
       } else {
         res.status(200);
       }

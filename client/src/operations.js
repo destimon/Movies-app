@@ -39,6 +39,9 @@ module.exports = {
       let res = await axios.delete(`http://127.0.0.1:3000/delete/${response.name}`)
       if (res.status == 200) {
         info('Success! Code: ', res.status);
+      }
+      else if (res.status == 202) {
+        log('Not found');
       } else {
         error('Failure! Code: ', res.status);
       }
