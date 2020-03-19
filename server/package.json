@@ -4,9 +4,9 @@
   "description": "server",
   "main": "server.js",
   "scripts": {
-    "test": "NODE_ENV=test mocha",
-    "dev": "NODE_ENV=dev nodemon server.js",
-    "start": "NODE_ENV=prod node server.js"
+    "test": "cross-env NODE_ENV=test mocha",
+    "dev": "nodemon server.js",
+    "start": "node server.js"
   },
   "author": "Dmitry Cherendieiv",
   "license": "ISC",
@@ -22,6 +22,7 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
+    "cross-env": "^7.0.2",
     "eslint": "^6.8.0",
     "mocha": "^7.1.0",
     "nodemon": "^2.0.2"
