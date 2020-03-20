@@ -94,7 +94,7 @@ describe('Films', () => {
         chai.request(server)
           .get('/show?name=doesntexist')
           .end((err, res) => {
-            res.should.have.status(200);
+            res.should.have.status(202);
           })
         done();
       })
@@ -108,7 +108,7 @@ describe('Films', () => {
           .get('/show')
           .send(actorObj)
           .end((err, res) => {
-            res.should.have.status(200);
+            res.should.have.status(202);
             res.body.should.be.a('array');
             res.body.length.should.be.a('number');
           })
