@@ -27,7 +27,6 @@ async function saveModel(req, res, model) {
 
           // Validatior
           let val_err = newModel.validateSync();
-          console.log(val_err);
           if (val_err) {
             res.status(406);
             res.json(val_err);

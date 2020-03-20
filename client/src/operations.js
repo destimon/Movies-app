@@ -10,8 +10,10 @@ module.exports = {
     const response = await prompt_met.get_full_info();
     let actors = await prompt_met.get_actors();
 
-    if (!actors)
+    if (!actors || !response.name || !response.date || !response.type) {
+      await error('You should fill all possible fields!')
       return ;
+    }
     try {
       let res = await axios.post('/add', null, {
         data: {
@@ -33,7 +35,8 @@ module.exports = {
       }
     } catch (err) {
       error('Error occured, unable to send request');
-      log(err.response.data.message);
+      if (err.response)
+        log(err.response.data.message);
     }
   },
 
