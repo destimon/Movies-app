@@ -45,7 +45,7 @@ module.exports = {
     let response = await prompt_met.get_film_name();
 
     try {
-      let res = await axios.delete(`/delete/${response.name}`);
+      let res = await axios.delete(encodeURI(`/delete/${response.name}`));
       if (res.status == 200) {
         info('Success! Code: ', res.status);
       }
@@ -63,10 +63,13 @@ module.exports = {
     let response = await prompt_met.get_film_name();
 
     try {
-      let res = await axios.get(`/films/${response.name}`);
+      let res = await axios.get(encodeURI(`/films/${response.name}`));
 
       if (res.data) {
-        prompt_met.output_formatted_info(res.data);
+        res.data.forEach(obj => {
+          prompt_met.output_formatted_info(obj);
+          info.m('\n');
+        })
       } else {
         log('Not found');
       }
@@ -91,12 +94,14 @@ module.exports = {
 
   async request_find_film() {
     let response = await prompt_met.get_film_name();
-
     try {
-      let res = await axios.get(`/films/${response.name}`);
+      let res = await axios.get(encodeURI(`/show?name=${response.name}`));
       
-      if (res.data) {
-        prompt_met.output_formatted_info(res.data);
+      if (res.status == 200) {
+        res.data.forEach(obj => {
+          prompt_met.output_formatted_info(obj);
+          info.m('\n');
+        })
       } else {
         log('Not found');
       }

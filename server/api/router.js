@@ -79,7 +79,7 @@ module.exports = function(app) {
 
   // 3. Show info about film
   app.get('/films/:name', (req, res) => {
-    Film.findOne({ name: req.params.name }, (err, data) => {
+    Film.find({ name: req.params.name }, (err, data) => {
       if (err) {
         handleError(err, res);
       } else {
@@ -108,8 +108,10 @@ module.exports = function(app) {
       Film.find({ name: req.query.name }, (err, data) => {
         if (err) {
           handleError(err, res);
+        } else {
+          console.log(data);
+          res.status(200).json(data);
         }
-        res.json(data);
       }); 
     }
     // 6. Find film by actors
