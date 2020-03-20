@@ -82,8 +82,11 @@ module.exports = function(app) {
     Film.find({ name: req.params.name }, (err, data) => {
       if (err) {
         handleError(err, res);
-      } else {
+      } else if (data.length > 0) {
+        console.log(data);
         res.status(200).json(data);
+      } else {
+        res.status(202).json(null);
       }
     });
   });
@@ -108,9 +111,11 @@ module.exports = function(app) {
       Film.find({ name: req.query.name }, (err, data) => {
         if (err) {
           handleError(err, res);
-        } else {
+        } else if (data.length > 0) {
           console.log(data);
           res.status(200).json(data);
+        } else {
+          res.status(202).json(null);
         }
       }); 
     }

@@ -1,5 +1,4 @@
 const axios = require('./config').axiosInstance;
-const moment = require('moment');
 const prompt_met = require('./prompt_methods');
 const { info, log, error, warn } = require('pretty-console-logs');
 const fs = require('fs');
