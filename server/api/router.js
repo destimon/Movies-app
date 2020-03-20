@@ -24,6 +24,15 @@ async function saveModel(req, res, model) {
           newModel.date = model.date;
           newModel.type = model.type;
           newModel.actors = model.actors;
+
+          // Validatior
+          let val_err = newModel.validateSync();
+          console.log(val_err);
+          if (val_err) {
+            res.status(406);
+            res.json(val_err);
+          }
+
           await newModel.save((err) => {
             if (err) {
               handleError(err, res);

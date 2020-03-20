@@ -7,8 +7,9 @@ const Film = new mongoose.Schema({
     default: 'Unnamed'
   },
   date: {
-    type: Date,
-    default: Date.now
+    type: Number,
+    min: [ 1850, 'Too low release year' ],
+    max: [ 2020, 'Too high release year' ]
   },
   type: { 
     type: String,

@@ -1,14 +1,24 @@
 const { prompt } = require('enquirer');
-const { warn } = require('pretty-console-logs');
+const { warn, error } = require('pretty-console-logs');
 const chalk = require('chalk');
+
+async function check_actor_dup(array, obj) {
+  let bool = false;
+
+  await array.forEach((el) => {
+    if (JSON.stringify(el) === JSON.stringify(obj)) {
+      bool = true;
+      error('Duplicates in stars is forbidden');
+    }
+  })
+  return bool;
+}
 
 module.exports = {
   output_formatted_info(obj1) {
-    let dateObj = new Date(obj1.date);
-  
     warn.m(`[ID ${obj1._id}]`);
     console.log(chalk.green('Title: ') + obj1.name);
-    console.log(`${chalk.green('Release Year:')} ${dateObj.getFullYear()}`);
+    console.log(`${chalk.green('Release Year:')} ${obj1.date}`);
     console.log(chalk.green('Format: ') + obj1.type);
     process.stdout.write(chalk.green('Stars:'));
     obj1.actors.forEach(obj2 => {
@@ -41,7 +51,10 @@ module.exports = {
       ]);
       obj.secondName = response.secondName;
 
-      array.push(obj);
+      let check = await check_actor_dup(array, obj);
+      if (check === false) {
+        array.push(obj);
+      }
       response = await prompt([
         {
           type: 'confirm',

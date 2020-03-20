@@ -10,12 +10,14 @@ module.exports = {
     const response = await prompt_met.get_full_info();
     let actors = await prompt_met.get_actors();
 
+    if (!actors)
+      return ;
     try {
       let res = await axios.post('/add', null, {
         data: {
           actors,
           name: response.name,
-          date: moment(response.date, 'YYYY-MM-DD').toDate(),
+          date: response.date,
           type: response.type,
         }
       });
@@ -25,11 +27,13 @@ module.exports = {
       }
       else if (res.status == 202) {
         log('Already exists');
-      } else {
+      }
+      else {
         error('Failure! Code: ', res.status);
       }
     } catch (err) {
       error('Error occured, unable to send request');
+      log(err.response.data.message);
     }
   },
 
