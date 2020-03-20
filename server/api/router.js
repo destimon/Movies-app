@@ -123,48 +123,54 @@ module.exports = function(app) {
   });
 
   app.post('/file', (req, res) => {
-    let text = req.files.file.data.toString('utf8');
-
-    // Cap'n Jazz – Oh Messy Life
-    Papa.parse(text, {
-      complete(results) {
-        let filmObj = {};
-        for (let film of results.data) {
-          if (film[0]) {
-            let line = film[0].split(':');
-            if (line[0].trim() == 'Title')
-              filmObj.name = line[1].trim();
-            else if (line[0].trim() == 'Release Year')
-              filmObj.date = line[1].trim();
-            else if (line[0].trim() == 'Format')
-              filmObj.type = line[1].trim();
-            else if (line[0].trim() == 'Stars') {
-              let starsArray = [];
-              let starsObj = {
-                firstName: line[1].trim().split(' ')[0],
-                secondName: line[1].trim().split(' ')[1]
-              };
-              starsArray.push(starsObj);
-              filmObj.actors = starsArray;
-              film.forEach(element => {
-                if (element.split(':')[0].trim() != 'Stars') {
-                  starsObj = {
-                    firstName: element.trim().split(' ')[0],
-                    secondName: element.trim().split(' ')[1]
-                  };
-                  starsArray.push(starsObj);
-                }
-              });
+    if (!req.files) {
+      res.status(204);
+      res.json({ message: 'File is empty' });
+    } else {
+      let text = req.files.file.data.toString('utf8');
+  
+      // Cap'n Jazz – Oh Messy Life
+      Papa.parse(text, {
+        complete(results) {
+          let filmObj = {};
+          for (let film of results.data) {
+            if (film[0]) {
+              let line = film[0].split(':');
+              if (line[0].trim() == 'Title')
+                filmObj.name = line[1].trim();
+              else if (line[0].trim() == 'Release Year')
+                filmObj.date = line[1].trim();
+              else if (line[0].trim() == 'Format')
+                filmObj.type = line[1].trim();
+              else if (line[0].trim() == 'Stars') {
+                let starsArray = [];
+                let starsObj = {
+                  firstName: line[1].trim().split(' ')[0],
+                  secondName: line[1].trim().split(' ')[1]
+                };
+                starsArray.push(starsObj);
+                filmObj.actors = starsArray;
+                film.forEach(element => {
+                  if (element.split(':')[0].trim() != 'Stars') {
+                    starsObj = {
+                      firstName: element.trim().split(' ')[0],
+                      secondName: element.trim().split(' ')[1]
+                    };
+                    starsArray.push(starsObj);
+                  }
+                });
+              }
+            } else {
+              saveModel(req, res, filmObj);
+              filmObj = {};
             }
-          } else {
-            saveModel(req, res, filmObj);
-            filmObj = {};
           }
-        }
-      },
-      dynamicTyping: true,
-    });
+        },
+        dynamicTyping: true,
+      });
+    }
     res.end();
   });
+    
 
 };

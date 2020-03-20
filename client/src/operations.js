@@ -1,8 +1,9 @@
 const axios = require('./config').axiosInstance;
 const moment = require('moment');
 const prompt_met = require('./prompt_methods');
-const { info, log, error } = require('pretty-console-logs');
+const { info, log, error, warn } = require('pretty-console-logs');
 const fs = require('fs');
+const path = require('path');
 const FormData = require('form-data');
 
 module.exports = {
@@ -131,6 +132,13 @@ module.exports = {
     let filename = await prompt_met.get_file_name();
     
     try {
+      let ext = path.extname(filename);
+
+      if (ext != '.txt') {
+        log('Incorrect extension of file')
+        throw 'Extension';
+      }
+      
       let formData = new FormData();
       formData.append('file', fs.createReadStream(filename));
       
@@ -142,11 +150,12 @@ module.exports = {
         .then(res => {
           if (res.status == 200) {
             info('Success! Code: ', res.status);
-          } else {
-            error('Failure! Code: ', res.status);
+          } else if (res.status == 204) {
+            warn('Failure! Code: ', res.status);
+            log('File is empty or damaged');
           }
         })
-        .catch(() => {
+        .catch((err) => {
           error('Error occured, unable to send request');
         });
     } catch (err) {
