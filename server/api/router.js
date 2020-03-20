@@ -8,7 +8,7 @@ function handleError(err, res) {
 
 async function saveModel(req, res, model) {
 
-  await Film.findOne({ name: model.name }, async (err, data) => {
+  await Film.findOne({ name: model.name, date: model.date }, async (err, data) => {
     try {
       if (err) {
         handleError(err, res);
