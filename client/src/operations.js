@@ -146,7 +146,7 @@ module.exports = {
         headers: {
           'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
         },
-      })
+      })  
         .then(res => {
           if (res.status == 200) {
             info('Success! Code: ', res.status);

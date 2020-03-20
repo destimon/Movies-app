@@ -92,7 +92,9 @@ module.exports = function(app) {
     if (req.query.asc) {
       // 4. Show films sorted in alphabetical order
       if (req.query.asc === 'alpha') {
-        Film.find({}).sort({ name: 'asc' }).exec((err, data) => {
+        Film.find({}).sort({ name: 1 })
+        .collation( { locale: 'en' } )
+        .exec((err, data) => {  
           if (err) {
             handleError(err, res);
           } else {
@@ -103,7 +105,7 @@ module.exports = function(app) {
     }
     else if (req.query.name) {
       // 5. Find film by name
-      Film.findOne({ name: req.query.name }, (err, data) => {
+      Film.find({ name: req.query.name }, (err, data) => {
         if (err) {
           handleError(err, res);
         }
@@ -112,7 +114,8 @@ module.exports = function(app) {
     }
     // 6. Find film by actors
     else if (req.body.actor) {
-      Film.find({ 'actors.firstName': req.body.actor.firstName, 'actors.secondName': req.body.actor.secondName }, (err, data) => {
+      Film.find({ 'actors.firstName': req.body.actor.firstName, 
+      'actors.secondName': req.body.actor.secondName }, (err, data) => {
         if (err) {
           handleError(err, res);
         } else {
